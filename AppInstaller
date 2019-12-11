@@ -1,0 +1,446 @@
+#!/bin/bash
+
+# Bash styling variables
+#---------------------------
+CHECK='\u2714'
+#CROSS='\u274c'
+CROSS='⨉ '
+CURVEARROW="⤷"
+
+BIBlue='\033[1;94m'
+BIPurple='\033[1;95m'
+
+BLINK='\e[5m'
+NORMAL='\e[25m'
+
+UNDERLINE='\e[4m'
+
+Yellow='\033[0;33m' 
+Green='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+LIGHTMAGENTA='\e[96m'
+
+BIGreen='\033[1;92m'
+BIRed='\033[1;91m'
+BIYellow='\033[1;93m'
+BIPurple='\033[1;95m'
+
+NC='\033[0m' # Color default mode
+#---------------------------
+
+# Two list for installed and not installed apps
+installed_apps=()
+not_installed_apps=()
+
+# Updating Repo
+sudo apt-get update
+# This download manager will be needed
+sudo apt-get install axel
+# This need to be install for using PPA
+sudo apt-get install software-properties-common
+sudo apt-get update
+
+# ZSH + oh-my-zsh
+sudo apt install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+#Unzip directory
+mkdir unzipedFiles
+
+#--------------| You can modify |---------------
+# Program list that wants to install, add yours 
+app_list=([1]="MPV PLAYER" 
+          [2]="VIM" 
+          [3]="Cisco any connect"
+          [4]="Tor"
+          [5]="Telegram"
+          [6]="XDM download manager"
+          [7]="Perspolise download manager"
+          [8]="Flaregate download manager"
+          [9]="Sublime"
+          [10]="Opera"
+          [11]="Kerio VPN"
+          [12]="Atomic Wallet"
+          [13]="USB image writer"
+          [14]="USB stick formatter"
+          [15]="VScodium"
+          [16]="Arduino IDE"
+          [17]="rar"
+          [18]="Spyder3"
+          [19]="Sound Converter"
+          [20]="Voko screan"
+          [21]="Guake terminal"
+          [22]="Tmux"
+          [23]="Sticky Notes"
+          [24]="PHP storm"
+          [25]="LAMPP"
+          [26]="Pycharm"
+          [27]="Proton VPN"
+	  [28]="Keybaord Layout(ibus)")
+
+# Installation commands
+# Add a number to CASE like other switch numbers
+# before and add your command to be executed.
+app_installation(){
+
+    case $1 in 
+        1)
+        installation_header "$2"
+
+        sudo apt-get install mpv
+
+        installation_footer "$1"
+        ;;
+
+        2)
+        installation_header "$2"
+
+        sudo apt-get install vim
+
+        installation_footer "$1"
+        ;;
+
+        3)
+        installation_header "$2"
+        
+        sudo apt-get install lib32z1 lib32ncurses5
+        #axel -a -k https://uci.service-now.com/sys_attachment.do?sys_id=3e869ef2db082b0054e7f236bf961900
+        tar -xzvf any* -C ./unzipedFiles
+        cd unzipedFiles
+        cd anyconnect*
+        cd vpn
+        ls -lh
+        sudo ./vpn_install.sh -y
+        sudo apt-get install network-manager-openconnect
+        sudo systemctl daemon-reload
+        alias vpn='/opt/cisco/anyconnect/bin/vpn'
+        alias vpnui='/opt/cisco/anyconnect/bin/vpnui'
+
+        echo -e "${Yellow}WARNING: add this to line with following command:${NC}"
+        echo -e "${Yellow}cat >> ~/.bash_aliases${NC}"
+        echo -e "${Yellow}alias vpn='/opt/cisco/anyconnect/bin/vpn'${NC}"
+        echo -e "${Yellow}alias vpnui='/opt/cisco/anyconnect/bin/vpnui'${NC}"
+        echo -e "${Yellow}Ctl+D${NC}"
+        
+        cd ../../..
+
+        installation_footer "$1"
+        ;;
+
+        4)
+        installation_header "$2"
+
+        sudo touch /etc/apt/sources.list.d/tor.list
+        su -
+        echo "deb https://deb.torproject.org/torproject.org stretch main" >> /etc/apt/sources.list.d/tor.list
+        echo "deb-src https://deb.torproject.org/torproject.org stretch main" >> /etc/apt/sources.list.d/tor.list
+        curl https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --import
+        gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+        apt update
+        apt install tor deb.torproject.org-keyring
+        exit
+
+        echo -e "${Yellow}WARNING: You should download Tor Browser${NC}"
+
+        installation_footer "$1"
+        ;;
+
+        5)
+        installation_header "$2"
+
+        #axel -a https://telegram.org/dl/desktop/linux
+        tar -xzvf tsetup* -C ./unzipedFiles
+        cd unzipedFiles
+        bash ./Telegram
+        echo -e "${Yellow}WARNING: Install Telegram${NC}"  
+
+        installation_footer "$1"
+        ;;
+
+        6)
+        installation_header "$2"
+
+        #axel -a https://sourceforge.net/projects/xdman/files/xdm-2018-x64.tar.xz/download
+        tar -xzvf xdm* -C ./unzipedFiles
+        cd unzipedFiles
+        cd xdm*
+        bash ./install.sh
+        cd ../../..
+        echo -e "${Yellow}WARNING: Install XDM${NC}"
+
+        installation_footer "$1"
+        ;;
+
+        7)
+        installation_header "$2"
+
+        sudo add-apt-repository ppa:persepolis/ppa
+        sudo apt update
+        sudo apt install persepolis
+        
+        installation_footer "$1"
+        ;;
+
+        8)
+        installation_header "$2"
+
+        #axel -a https://flareget.com/downloads/files/flareget/debs/amd64/flareget_4.8-108_amd64.deb
+        sudo dpkg -i flareget_4.8-108_amd64.deb
+        
+        installation_footer "$1"
+        ;;
+
+        9)
+        installation_header "$2"
+
+        wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+        sudo apt-get install apt-transport-https
+        su -
+        echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+        apt-get update
+        apt-get install sublime-text
+        exit
+        
+        installation_footer "$1"
+        ;;
+
+        10)
+        installation_header "$2"
+
+        echo -e "${Yellow}You can install Opera later${NC}"
+        
+        #installation_footer "$1"
+        ;;
+
+        11)
+        installation_header "$2"
+
+        #axel -a http://cdn.kerio.com/dwn/control/control-9.3.2-3557/kerio-control-vpnclient-9.3.2-3557-linux-amd64.deb
+        sudo dpkg -i kerio-control-vpnclient*
+        sudo dpkg-reconfigure kerio-control-vpnclient
+        sudo /etc/init.d/kerio-kvc reload
+        
+        installation_footer "$1"
+        ;;
+
+        12)
+        installation_header "$2"
+
+        echo -e "${Yellow}You can install this later${NC}"
+        
+        #installation_footer "$1"
+        ;;
+
+        13)
+        installation_header "$2"
+
+        sudo apt-get install mintstick
+        echo -e "${Yellow}It's a part of Mintstick Package${NC}"
+        
+        installation_footer "$1"
+        ;;
+
+        14)
+        installation_header "$2"
+
+        echo -e "${Yellow}It's a part of Mintstick Package${NC}"
+        
+        #installation_footer "$1"
+        ;;
+
+        15)
+        installation_header "$2"
+
+        wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | sudo apt-key add -
+        su -
+        echo 'deb https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/repos/debs/ vscodium main' | sudo tee --append /etc/apt/sources.list.d/vscodium.list
+        apt update
+        apt install codium
+        exit
+        
+        installation_footer "$1"
+        ;;
+
+        16)
+        installation_header "$2"
+
+        echo -e "${Yellow}You can install Opera Arduino IDE${NC}"
+        
+        #installation_footer "$1"
+        ;;
+
+        17)
+        installation_header "$2"
+
+        echo -e "${Yellow}You can install Opera later rar${NC}"
+        
+        #installation_footer "$1"
+        ;;
+
+        18)
+        installation_header "$2"
+
+        echo -e "${Yellow}You can install Opera Spyder3${NC}"
+        
+        #installation_footer "$1"
+        ;;
+
+        19)
+        installation_header "$2"
+        
+        echo -e "${Yellow}You can install Sound Converter${NC}"
+
+        #installation_footer "$1"
+        ;;
+
+        20)
+        installation_header "$2"
+
+        sudo apt install vokoscreen
+        
+        installation_footer "$1"
+        ;;
+
+        21)
+        installation_header "$2"
+
+        sudo apt-get install guake
+        
+        installation_footer "$1"
+        ;;
+
+        22)
+        installation_header "$2"
+
+        echo -e "${Yellow}You can install Tmux${NC}"
+        
+        #installation_footer "$1"
+        ;;
+
+        23)
+        installation_header "$2"
+
+        echo -e "${Yellow}You can install Sticky${NC}"
+        
+        #installation_footer "$1"
+        ;;
+
+        24)
+        installation_header "$2"
+
+        sudo tar -xfz PhpStorm* -C /opt
+        cd /opt/PhpStorm-*/bin
+        sh PhpStorm.sh
+        cd ~/AppInstaller
+        
+        installation_footer "$1"
+        ;;
+
+        25)
+        installation_header "$2"
+
+        sudo apt-get install mysql-server mysql-client libmysqlclient-dev
+        sudo apt-get install apache2 apache2-doc apache2-npm-prefork apache2-utils libexpat1 ssl-cert
+        sudo apt-get install libapache2-mod-php7.0 php7.0 php7.0-common php7.0-curl php7.0-dev php7.0-gd php-pear php-imagick php7.0-mcrypt php7.0-mysql php7.0-ps php7.0-xsl
+        sudo apt-get install phpmyadmin
+        
+        installation_footer "$1"
+        ;;
+
+        26)
+        installation_header "$2"
+
+        sudo tar xfz pycharm* -C /opt/
+        cd /opt/pycharm* /bin
+        sh pycharm.sh
+        cd ~/AppInstaller
+        
+        installation_footer "$1"
+        ;;
+
+        27)
+        installation_header "$2"
+
+        sudo apt install -y openvpn dialog python3-pip python3-setuptools
+        sudo pip3 install protonvpn-cli
+
+        echo "Commands you need is : https://github.com/ProtonVPN/protonvpn-cli-ng and 
+              https://github.com/ProtonVPN/protonvpn-cli-ng/blob/master/USAGE.md"
+        
+        installation_footer "$1"
+        ;;
+
+	27)
+        installation_header "$2"
+
+		sudo apt install ibus
+		sudo apt install ibus-m17n
+		ibus-setup
+        
+        installation_footer "$1"
+        ;;
+
+        *)
+        echo -e "${Yellow}Nothing${NC}"
+        echo ""
+        ;;
+    esac
+}
+#---------------------------------------
+
+# If you don't know what are you doing 
+# just don't change anything here
+#=======================================================================================
+installation_header(){
+    echo -e "${BIPurple}Installing app${BIBlue} $1 ${BIPurple}...${NC}"
+}
+
+installation_footer(){
+    echo ""
+    echo -e "${Green}Installation Done${NC}"
+    installed_apps+=("$1")
+    sleep 8
+}
+
+show_list(){
+    clear
+    local -n array=$1
+    
+    for app in ${!array[@]};
+    do
+        if [[ "${installed_apps[@]}" =~ "${app}" ]];then
+            echo -e "${BIGreen}${CHECK} ${BIPurple}$app${NORMAL}${NC}.${Yellow}${array[$app]}${NC}"
+        elif [[ "${not_installed_apps[@]}" =~ "${app}" ]];then
+            echo -e "${BLINK}${BIRed}${CROSS}${BIPurple}$app${NC}.${Yellow}${array[$app]}${NC}"
+        else
+            echo -e "${BIPurple}${CURVEARROW} $app${NORMAL}${NC}.${Yellow}${array[$app]}${NC}"
+        fi
+    done
+    echo ""
+    echo ""
+}
+
+for item in "${!app_list[@]}";
+    do
+        show_list app_list
+
+        echo -e "${LIGHTMAGENTA}Do you want to install${NC} ${BIBlue}${UNDERLINE}${app_list[$item]}${NC} ${LIGHTMAGENTA}?${NC}(y|Y or n|N):"
+        read input
+        if [[ $input == 'y' ]] || [[ $input == 'Y' ]]; 
+        then
+            app_installation "$item" "${app_list[$item]}"
+        elif [[ $input == 'n' ]] || [[ $input == 'N' ]];
+        then
+            not_installed_apps+=($item)
+        else
+            echo -e "${RED}Bad Input${NC}"
+            echo -e "${BIYellow}Resetting Program ...${NC}"
+            sleep 3
+            clear
+            bash AppInstaller
+        fi
+    done
+#========================================================================================
+
